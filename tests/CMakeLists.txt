@@ -133,6 +133,7 @@ FILE (GLOB dmanCppFiles
 
 FILE (GLOB dmanHeaderFiles
     ../src/base/consts.h
+    ../src/base/eventlogutils.h
     ../src/base/utils.h
     ../src/base/eventlogutils.h
     ../src/controller/*.h
