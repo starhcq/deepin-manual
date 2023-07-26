@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 
     QDBusConnection conn = QDBusConnection::sessionBus();
     if (!conn.registerService(kManualSearchService)
-            || !conn.registerObject(kManualSearchIface, &search_obj)) {
+            || !conn.registerObject(kManualSearchIface, &adapter, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals)) {
         qCritical() << "dmanHelper failed to register dbus service";
         return -1;
     } else {

@@ -13,6 +13,7 @@
 #define MANUAL_SEARCH_ADAPTER_H
 
 #include <QtDBus/QtDBus>
+#include <QDBusContext>
 
 QT_BEGIN_NAMESPACE
 class QByteArray;
@@ -28,7 +29,8 @@ QT_END_NAMESPACE
 /*
  * Adaptor class for interface com.deepin.Manual.Search
  */
-class ManualSearchAdapter : public QDBusAbstractAdaptor
+class ManualSearchAdapter : public QObject
+        , protected QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "com.deepin.Manual.Search")
@@ -57,6 +59,8 @@ public Q_SLOTS: // METHODS
 
 Q_SIGNALS: // SIGNALS
     void SendWinInfo(const QString &data);
+private:
+    QString invokePath();
 };
 
 #endif

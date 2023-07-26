@@ -25,8 +25,10 @@ void DManWatcher::onTimeOut()
     cmd = QString("ps aux | grep -w dman$");
     outPut= executCmd(cmd);
     int ret = outPut.length();
-    if (!ret)
+    if (!ret) {
+        qInfo() << "not found dman, dmanHelper quit.";
         QCoreApplication::exit(0);
+    }
 }
 
 /**

@@ -15,10 +15,9 @@
  */
 
 ManualSearchAdapter::ManualSearchAdapter(QObject *parent)
-    : QDBusAbstractAdaptor(parent)
+    : QObject(parent)
 {
     // constructor
-    setAutoRelaySignals(true);
 }
 
 ManualSearchAdapter::~ManualSearchAdapter()
@@ -35,6 +34,7 @@ bool ManualSearchAdapter::ManualExists(const QString &in0)
 {
     // handle method call com.deepin.Manual.Search.ManualExists
     bool out0;
+    qInfo() << QString("ManualSearchAdapter::ManualExists app:%1 invokepath:%2.").arg(in0).arg(invokePath());
     QMetaObject::invokeMethod(parent(), "ManualExists", Q_RETURN_ARG(bool, out0), Q_ARG(QString, in0));
     return out0;
 }
@@ -46,4 +46,25 @@ bool ManualSearchAdapter::ManualExists(const QString &in0)
 void ManualSearchAdapter::OnNewWindowOpen(const QString &data)
 {
     QMetaObject::invokeMethod(parent(), "OnNewWindowOpen", Q_ARG(QString, data));
+}
+
+QString ManualSearchAdapter::invokePath()
+{
+    bool valid = false;
+    QDBusConnection conn = connection();
+    QDBusMessage msg = message();
+
+    //判断是否存在执行路径
+    uint pid = conn.interface()->servicePid(msg.service()).value();
+    QFileInfo f(QString("/proc/%1/exe").arg(pid));
+    if (!f.exists()) {
+        valid = false;
+    } else {
+        valid = true;
+    }
+
+    //是否存在于可调用者名单中
+    QStringList ValidInvokerExePathList;
+    QString invokerPath = f.canonicalFilePath();
+    return invokerPath + " pid: " + QString::number(pid);
 }
